@@ -63,10 +63,14 @@ namespace API.Controllers
 
             if(!result.Succeeded) return Unauthorized();
 
+            var roleResult = await _userManager.AddToRoleAsync(user, "Mmeber");
+
+            if(!roleResult.Succeeded) return BadRequest(result.Errors);
+
             return new UserDto
             {
                 Username = user.UserName,
-                Token = _tokenService.CreateToken(user),
+                Token = await_tokenService.CreateToken(user),
                 PhotoUrl = user.Photos.FirstOrDefault(x => x.IsMain)?.Url,
                 KonwnAs = user.KnownAs,
                 Gender = user.Gender
