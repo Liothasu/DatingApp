@@ -15,10 +15,10 @@ namespace API.Helpers
             if(!resutlContext.HttpContext.User.Identity.IsAuthenticated) return;
 
             var userId = resutlContext.HttpContext.User.GetUserId();
-            var repo = resutlContext.HttpContext.RequestServices.GetService<IUserRepository>();
-            var user = await repo.GetUserByUsernameAsync(userId);
+            var uow = resutlContext.HttpContext.RequestServices.GetService<IUserRepository>();
+            var user = await uow.GetUserByUsernameAsync(userId);
             user.LastActive = DateTime.Now;
-            await repo.SaveAllAsync();
+            await uow.Complete();
         }
     }
 }
